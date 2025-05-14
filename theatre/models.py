@@ -14,6 +14,10 @@ class Actor(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True, null=False, blank=False)
@@ -52,6 +56,7 @@ class TheatreHall(models.Model):
         verbose_name_plural = "Theatre Halls"
         ordering = ("name",)
 
+    @property
     def seating_capacity(self):
         return self.rows * self.seats_in_row
 
