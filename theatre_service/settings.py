@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "user",
     "rest_framework",
     "rest_framework_simplejwt",
+    "debug_toolbar",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -131,4 +133,17 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication"
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theatre Service",
+    "DESCRIPTION": "Online reservation system for theatre performances",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deeplinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2
+    }
 }
