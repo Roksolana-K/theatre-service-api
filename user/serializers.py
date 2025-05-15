@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
+from theatre.models import Genre
+
 User = get_user_model()
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -30,7 +32,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    favorite_genres = serializers.SlugRelatedField(many=True, write_only=True, slug_field="name")
+    favorite_genres = serializers.SlugRelatedField(many=True, write_only=True, slug_field="name", queryset=Genre.objects.all())
     password = serializers.CharField(
         write_only=True,
         required=False,
