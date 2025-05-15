@@ -47,24 +47,12 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = ("id", "tickets", "created_at")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if hasattr(self, "initial_data") and self.initial_data.get("performance"):
-            performance_id = self.initial_data.get("performance")
-            try:
-                performance = Performance.objects.get(pk=performance_id)
-                self.fields["tickets"].child.context.update({"performance": performance})
-            except Performance.DoesNotExist:
-                pass
-
     def create(self, validated_data):
-        with transaction.atomic():
-            tickets_data = validated_data.pop("tickets")
-            performance = validated_data["performance"]
-            reservation = Reservation.objects.create(**validated_data)
-            for ticket_data in tickets_data:
-                Ticket.objects.create(reservation=reservation, performance=performance, **ticket_data)
-            return reservation
+        tickets_data = validated_data.pop("tickets")
+        reservation = Reservation.objects.create(**validated_data)
+        for ticket_data in tickets_data:
+            Ticket.objects.create(reservation=reservation, **ticket_data)
+        return reservation
 
 
 class ReservationListSerializer(serializers.ModelSerializer):
