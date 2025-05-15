@@ -46,6 +46,7 @@ class TheatreHallSerializer(serializers.ModelSerializer):
 
 
 class PerformanceListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Performance
         fields = ("id", "play", "show_time")
@@ -55,13 +56,8 @@ class PerformanceDetailSerializer(PerformanceListSerializer):
     play_title = serializers.CharField(source="play.title", read_only=True)
     theatre_hall_name = serializers.CharField(source="theatre_hall.name", read_only=True)
     theatre_hall_capacity = serializers.IntegerField(source="theatre_hall.seating_capacity", read_only=True)
-    tickets_available = serializers.SerializerMethodField()
+    tickets_available = serializers.IntegerField(read_only=True)
 
-    @staticmethod
-    def get_tickets_available(self, obj):
-        total_seats = obj.theatre_hall.seating_capacity
-        sold_tickets = obj.tickets.count()
-        return total_seats - sold_tickets
 
     class Meta:
         model = Performance
