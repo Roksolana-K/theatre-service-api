@@ -1,8 +1,10 @@
+from django.db.models import Count, F
 from rest_framework import filters, viewsets
 from rest_framework.permissions import AllowAny, IsAdminUser
 
 from theatre.models import Actor, Genre, Performance, Play, TheatreHall
-from theatre.serializers import ActorSerializer, GenreSerializer, PerformanceListSerializer, PlayDetailSerializer, \
+from theatre.serializers import ActorSerializer, GenreSerializer, PerformanceDetailSerializer, \
+    PerformanceListSerializer, PlayDetailSerializer, \
     PlayListSerializer, \
     PlaySerializer, \
     TheatreHallSerializer
@@ -54,10 +56,11 @@ class TheatreHallViewSet(TheatrePermissionMixin):
 
 
 class PerformanceViewSet(TheatrePermissionMixin):
-    queryset = Performance.objects.select_related("theatre_hall", "play").order_by("show_time")
+    queryset = Performance.objects.all().select_related("theatre_hall", "play").annotate(tickets_available=(
+        F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets"))).order_by("show_time")
     serializer_class = PerformanceListSerializer
 
     def get_serializer_class(self):
         if self.action == "retrieve":
-            return PlayDetailSerializer
+            return PerformanceDetailSerializer
         return PerformanceListSerializer
