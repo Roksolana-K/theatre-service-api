@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
+from rest_framework import generics, serializers
+from rest_framework.permissions import IsAuthenticated
 
 from theatre.models import Genre
 
 User = get_user_model()
+
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:

@@ -20,7 +20,7 @@ class TheatrePermissionMixin(viewsets.ModelViewSet):
 class ActorViewSet(TheatrePermissionMixin):
     queryset = Actor.objects.all().order_by("first_name")
     serializer_class = ActorSerializer
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ("first_name", "last_name")
     ordering_fields = ("first_name","last_name")
 
@@ -28,7 +28,7 @@ class ActorViewSet(TheatrePermissionMixin):
 class GenreViewSet(TheatrePermissionMixin):
     queryset = Genre.objects.all().order_by("name")
     serializer_class = GenreSerializer
-    filter_backends = filters.SearchFilter
+    filter_backends = [filters.SearchFilter]
     search_fields = ("name",)
 
 
@@ -48,11 +48,11 @@ class PlayViewSet(TheatrePermissionMixin):
 
 
 class TheatreHallViewSet(TheatrePermissionMixin):
-    queryset = TheatreHall.objects.all().order_by("title")
+    queryset = TheatreHall.objects.all().order_by("name")
     serializer_class = TheatreHallSerializer
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    search_fields = ("title",)
-    ordering_fields = ("title",)
+    search_fields = ("name",)
+    ordering_fields = ("name",)
 
 
 class PerformanceViewSet(TheatrePermissionMixin):

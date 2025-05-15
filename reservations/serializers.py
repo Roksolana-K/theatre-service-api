@@ -45,12 +45,12 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ("id", "performance", "tickets", "created_at")
+        fields = ("id", "tickets", "created_at")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        performance_id = self.initial_data.get("performance")
-        if performance_id:
+        if hasattr(self, "initial_data") and self.initial_data.get("performance"):
+            performance_id = self.initial_data.get("performance")
             try:
                 performance = Performance.objects.get(pk=performance_id)
                 self.fields["tickets"].child.context.update({"performance": performance})
@@ -67,5 +67,9 @@ class ReservationSerializer(serializers.ModelSerializer):
             return reservation
 
 
-class ReservationListSerializer(ReservationSerializer):
+class ReservationListSerializer(serializers.ModelSerializer):
     tickets = TicketListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Reservation
+        fields = ("id", "tickets")

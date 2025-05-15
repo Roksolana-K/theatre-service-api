@@ -15,5 +15,4 @@ router.register("performances", PerformanceViewSet)
 
 urlpatterns = [
     path("", include(router.urls))
-
 ]

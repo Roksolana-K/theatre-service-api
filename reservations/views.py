@@ -1,8 +1,9 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import filters, generics
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from reservations.models import Reservation
-from reservations.serializers import ReservationListSerializer, ReservationSerializer, TicketSoldSeatsSerializer
+from reservations.serializers import ReservationListSerializer, ReservationSerializer
 
 
 class CreateReservationView(generics.CreateAPIView):
@@ -12,16 +13,14 @@ class CreateReservationView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
 class MyReservationListView(generics.ListAPIView):
     serializer_class = ReservationListSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = filters.OrderingFilter
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ("created_at",)
 
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user).order_by("-created_at")
-
 
 class MyReservationDetailView(generics.RetrieveAPIView):
     serializer_class = ReservationSerializer

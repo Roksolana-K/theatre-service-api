@@ -1,5 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 
 class Actor(models.Model):
@@ -15,6 +17,7 @@ class Actor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     @property
+    @extend_schema_field(str)
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -56,8 +59,8 @@ class TheatreHall(models.Model):
         verbose_name_plural = "Theatre Halls"
         ordering = ("name",)
 
-    @property
-    def seating_capacity(self):
+    @extend_schema_field(OpenApiTypes.INT)
+    def seating_capacity(self) -> int:
         return self.rows * self.seats_in_row
 
     def __str__(self):

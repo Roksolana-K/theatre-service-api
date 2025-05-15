@@ -3,7 +3,8 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from user.serializers import UserCreateSerializer, UserDetailSerializer, UserListSerializer, UserUpdateSerializer
+from user.serializers import UserCreateSerializer, UserDetailSerializer, UserListSerializer, \
+    UserUpdateSerializer
 
 User = get_user_model()
 
@@ -28,6 +29,7 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 class DeleteUserView(generics.DestroyAPIView):
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
+    serializer_class = UserDetailSerializer
 
     def get_object(self):
         return self.request.user
