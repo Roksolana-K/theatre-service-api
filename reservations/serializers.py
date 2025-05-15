@@ -6,12 +6,14 @@ from theatre.models import Performance
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    performance = serializers.PrimaryKeyRelatedField(queryset=Performance.objects.all())
+
     class Meta:
         model = Ticket
-        fields = ("row", "seat")
+        fields = ("row", "seat", "performance")
 
     def validate(self, data):
-        performance = self.context.get("performance")
+        performance = data.get("performance")
         if not performance:
             raise serializers.ValidationError("Performance not provided.")
 
