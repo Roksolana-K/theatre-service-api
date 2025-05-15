@@ -2,7 +2,6 @@ from django.db import transaction
 from rest_framework import serializers
 
 from reservations.models import Reservation, Ticket
-from theatre.models import Performance
 
 
 class TicketListSerializer(serializers.ModelSerializer):
@@ -20,11 +19,6 @@ class TicketDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("id", "show_time", "show_name", "theatre_hall", "row", "seat", "created_at")
-
-class TicketSoldSeatsSerializer(TicketDetailSerializer):
-    class Meta:
-        model = Ticket
-        fields = ("row", "seat")
 
 
 class ReservationSerializer(serializers.ModelSerializer):
