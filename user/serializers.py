@@ -51,7 +51,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         for key, value in validated_data.items():
-            setattr(instance, key, value)
+            if key == "favorite_genres":
+                instance.favorite_genres.set(value)
+            else:
+                setattr(instance, key, value)
 
         instance.save()
 
