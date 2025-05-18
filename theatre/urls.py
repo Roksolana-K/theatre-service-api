@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from theatre.views import ActorViewSet, GenreViewSet, PerformanceViewSet, PlayViewSet, TheatreHallViewSet
 
-app_name = "cinema"
+app_name = "theatre"
 
 router = routers.DefaultRouter()
 router.register("actors", ActorViewSet)
