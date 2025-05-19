@@ -19,22 +19,27 @@ class ReservationViewsTest(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(email="user@example.com", password="testpass123")
-        self.admin = User.objects.create_superuser(email="admin@example.com", password="adminpass123")
+        self.user = User.objects.create_user(
+            email="user@example.com", password="testpass123"
+        )
+        self.admin = User.objects.create_superuser(
+            email="admin@example.com", password="adminpass123"
+        )
 
         self.play = Play.objects.create(title="Hamlet")
-        self.hall = TheatreHall.objects.create(name="Main Hall", rows=10, seats_in_row=10)
+        self.hall = TheatreHall.objects.create(
+            name="Main Hall", rows=10, seats_in_row=10
+        )
         self.performance = Performance.objects.create(
             play=self.play,
             theatre_hall=self.hall,
-            show_time=timezone.now() + timedelta(days=1)
+            show_time=timezone.now() + timedelta(days=1),
         )
 
         self.reservation = Reservation.objects.create(user=self.user)
         self.ticket = Ticket.objects.create(
             reservation=self.reservation, performance=self.performance, row=1, seat=1
         )
-
 
     def test_create_reservation(self):
         self.client.force_authenticate(user=self.user)

@@ -3,11 +3,16 @@ from rest_framework import filters, viewsets
 from rest_framework.permissions import AllowAny, IsAdminUser
 
 from theatre.models import Actor, Genre, Performance, Play, TheatreHall
-from theatre.serializers import ActorSerializer, GenreSerializer, PerformanceDetailSerializer, \
-    PerformanceListSerializer, PlayDetailSerializer, \
-    PlayListSerializer, \
-    PlaySerializer, \
-    TheatreHallSerializer
+from theatre.serializers import (
+    ActorSerializer,
+    GenreSerializer,
+    PerformanceDetailSerializer,
+    PerformanceListSerializer,
+    PlayDetailSerializer,
+    PlayListSerializer,
+    PlaySerializer,
+    TheatreHallSerializer,
+)
 
 
 class TheatrePermissionMixin(viewsets.ModelViewSet):
@@ -22,7 +27,7 @@ class ActorViewSet(TheatrePermissionMixin):
     serializer_class = ActorSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ("first_name", "last_name")
-    ordering_fields = ("first_name","last_name")
+    ordering_fields = ("first_name", "last_name")
 
 
 class GenreViewSet(TheatrePermissionMixin):
@@ -37,7 +42,6 @@ class PlayViewSet(TheatrePermissionMixin):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ("title", "actor__first_name", "actor__last_name", "genre__name")
     ordering_fields = ("title", "actor__first_name", "genre__name")
-
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -56,8 +60,17 @@ class TheatreHallViewSet(TheatrePermissionMixin):
 
 
 class PerformanceViewSet(TheatrePermissionMixin):
-    queryset = Performance.objects.all().select_related("theatre_hall", "play").annotate(tickets_available=(
-        F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets"))).order_by("show_time")
+    queryset = (
+        Performance.objects.all()
+        .select_related("theatre_hall", "play")
+        .annotate(
+            tickets_available=(
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                - Count("tickets")
+            )
+        )
+        .order_by("show_time")
+    )
     serializer_class = PerformanceListSerializer
 
     def get_serializer_class(self):

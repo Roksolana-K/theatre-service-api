@@ -12,19 +12,25 @@ class TheatreViewSetTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(email="user@example.com", password="testpass123")
-        self.admin = User.objects.create_superuser(email="admin@example.com", password="adminpass123")
+        self.user = User.objects.create_user(
+            email="user@example.com", password="testpass123"
+        )
+        self.admin = User.objects.create_superuser(
+            email="admin@example.com", password="adminpass123"
+        )
 
         self.actor = Actor.objects.create(first_name="John", last_name="Doe")
         self.genre = Genre.objects.create(name="Tragedy")
-        self.hall = TheatreHall.objects.create(name="Big Hall", rows=10, seats_in_row=20)
+        self.hall = TheatreHall.objects.create(
+            name="Big Hall", rows=10, seats_in_row=20
+        )
         self.play = Play.objects.create(title="Hamlet")
         self.play.genre.add(self.genre)
         self.play.actor.add(self.actor)
         self.performance = Performance.objects.create(
             play=self.play,
             theatre_hall=self.hall,
-            show_time=timezone.now() + timedelta(days=1)
+            show_time=timezone.now() + timedelta(days=1),
         )
 
     def test_actor_list_view_anonymous(self):
@@ -74,14 +80,22 @@ class TheatreViewSetTests(TestCase):
     def test_play_create_forbidden_for_user(self):
         self.client.force_authenticate(self.user)
         url = reverse("theatre:play-list")
-        data = {"title": "Test Play", "genre": [self.genre.id], "actor": [self.actor.id]}
+        data = {
+            "title": "Test Play",
+            "genre": [self.genre.id],
+            "actor": [self.actor.id],
+        }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_play_create_allowed_for_admin(self):
         self.client.force_authenticate(self.admin)
         url = reverse("theatre:play-list")
-        data = {"title": "Test Play", "genre": [self.genre.id], "actor": [self.actor.id]}
+        data = {
+            "title": "Test Play",
+            "genre": [self.genre.id],
+            "actor": [self.actor.id],
+        }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

@@ -15,22 +15,22 @@ from reservations.serializers import (
 class SerializerTests(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(email="user@example.com", password="testpass123")
+        self.user = User.objects.create_user(
+            email="user@example.com", password="testpass123"
+        )
         self.play = Play.objects.create(title="Hamlet")
-        self.hall = TheatreHall.objects.create(name="Main Hall", rows=10, seats_in_row=10)
+        self.hall = TheatreHall.objects.create(
+            name="Main Hall", rows=10, seats_in_row=10
+        )
         self.performance = Performance.objects.create(
             play=self.play,
             theatre_hall=self.hall,
-            show_time=timezone.now() + timedelta(days=1)
+            show_time=timezone.now() + timedelta(days=1),
         )
         self.reservation = Reservation.objects.create(user=self.user)
 
     def test_ticket_serializer_valid(self):
-        payload = {
-            "row": 3,
-            "seat": 4,
-            "performance": self.performance.id
-        }
+        payload = {"row": 3, "seat": 4, "performance": self.performance.id}
         serializer = TicketSerializer(data=payload)
         self.assertTrue(serializer.is_valid(), serializer.errors)
 
@@ -39,20 +39,13 @@ class SerializerTests(TestCase):
             row=5, seat=6, performance=self.performance, reservation=self.reservation
         )
 
-        payload = {
-            "row": 5,
-            "seat": 6,
-            "performance": self.performance.id
-        }
+        payload = {"row": 5, "seat": 6, "performance": self.performance.id}
         serializer = TicketSerializer(data=payload)
         self.assertFalse(serializer.is_valid())
         self.assertIn("non_field_errors", serializer.errors)
 
     def test_ticket_serializer_missing_performance(self):
-        payload = {
-            "row": 1,
-            "seat": 1
-        }
+        payload = {"row": 1, "seat": 1}
         serializer = TicketSerializer(data=payload)
         self.assertFalse(serializer.is_valid())
         self.assertIn("performance", serializer.errors)
@@ -69,5 +62,7 @@ class SerializerTests(TestCase):
         self.assertTrue(serializer.is_valid(), serializer.errors)
         reservation = serializer.save(user=self.user)
 
-        self.assertEqual(Reservation.objects.count(), 2)  # one created in setUp + new one
+        self.assertEqual(
+            Reservation.objects.count(), 2
+        )  # one created in setUp + new one
         self.assertEqual(reservation.tickets.count(), 2)

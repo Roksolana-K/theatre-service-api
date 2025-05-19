@@ -3,9 +3,12 @@ from django.db import models
 from theatre.models import Performance
 from user.models import User
 
+
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservations")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="reservations"
+    )
 
     class Meta:
         verbose_name = "Reservation"
@@ -17,10 +20,18 @@ class Reservation(models.Model):
 
 
 class Ticket(models.Model):
-    row = models.IntegerField(validators=[MinValueValidator(1)], null=False, blank=False)
-    seat = models.IntegerField(validators=[MinValueValidator(1)], null=False, blank=False)
-    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name="tickets")
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="tickets")
+    row = models.IntegerField(
+        validators=[MinValueValidator(1)], null=False, blank=False
+    )
+    seat = models.IntegerField(
+        validators=[MinValueValidator(1)], null=False, blank=False
+    )
+    performance = models.ForeignKey(
+        Performance, on_delete=models.CASCADE, related_name="tickets"
+    )
+    reservation = models.ForeignKey(
+        Reservation, on_delete=models.CASCADE, related_name="tickets"
+    )
 
     class Meta:
         verbose_name = "Ticket"

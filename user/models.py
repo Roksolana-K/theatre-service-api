@@ -35,6 +35,7 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+
 class User(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
@@ -43,21 +44,23 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=25, blank=True, null=True)
     phone_number = PhoneNumberField(blank=True)
     birth_date = models.DateField(blank=True, null=True)
-    favorite_genres = models.ManyToManyField(Genre, blank=True, related_name="user_favorites")
+    favorite_genres = models.ManyToManyField(
+        Genre, blank=True, related_name="user_favorites"
+    )
 
     groups = models.ManyToManyField(
-        'auth.Group',
-        verbose_name='groups',
+        "auth.Group",
+        verbose_name="groups",
         blank=True,
-        related_name='custom_user_set',
-        related_query_name='user'
+        related_name="custom_user_set",
+        related_query_name="user",
     )
     user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        verbose_name='user permissions',
+        "auth.Permission",
+        verbose_name="user permissions",
         blank=True,
-        related_name='custom_user_permissions_set',
-        related_query_name='user'
+        related_name="custom_user_permissions_set",
+        related_query_name="user",
     )
 
     USERNAME_FIELD = "email"

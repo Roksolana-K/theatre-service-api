@@ -3,10 +3,15 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from user.serializers import UserCreateSerializer, UserDetailSerializer, UserListSerializer, \
-    UserUpdateSerializer
+from user.serializers import (
+    UserCreateSerializer,
+    UserDetailSerializer,
+    UserListSerializer,
+    UserUpdateSerializer,
+)
 
 User = get_user_model()
+
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer

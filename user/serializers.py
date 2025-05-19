@@ -34,7 +34,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    favorite_genres = serializers.SlugRelatedField(many=True, write_only=True, slug_field="name", queryset=Genre.objects.all())
+    favorite_genres = serializers.SlugRelatedField(
+        many=True, write_only=True, slug_field="name", queryset=Genre.objects.all()
+    )
     password = serializers.CharField(
         write_only=True,
         required=False,
@@ -62,8 +64,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    favorite_genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    favorite_genres = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="name"
+    )
 
     class Meta:
         model = User
-        fields = ("id", "email", "first_name", "last_name", "birth_date", "favorite_genres")
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "birth_date",
+            "favorite_genres",
+        )

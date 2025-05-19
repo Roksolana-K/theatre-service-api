@@ -21,7 +21,9 @@ class TicketSerializer(serializers.ModelSerializer):
         seat = data["seat"]
 
         if Ticket.objects.filter(performance=performance, row=row, seat=seat).exists():
-            raise serializers.ValidationError(f"Seat {seat} in row {row} is already taken.")
+            raise serializers.ValidationError(
+                f"Seat {seat} in row {row} is already taken."
+            )
         return data
 
 
@@ -32,14 +34,28 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 
 class TicketDetailSerializer(serializers.ModelSerializer):
-    show_time = serializers.DateTimeField(source="performance.show_time", read_only=True)
+    show_time = serializers.DateTimeField(
+        source="performance.show_time", read_only=True
+    )
     show_name = serializers.CharField(source="performance.play.title", read_only=True)
-    theatre_hall = serializers.CharField(source="performance.theatre_hall.name", read_only=True)
-    created_at = serializers.DateTimeField(source="reservation.created_at", read_only=True)
+    theatre_hall = serializers.CharField(
+        source="performance.theatre_hall.name", read_only=True
+    )
+    created_at = serializers.DateTimeField(
+        source="reservation.created_at", read_only=True
+    )
 
     class Meta:
         model = Ticket
-        fields = ("id", "show_time", "show_name", "theatre_hall", "row", "seat", "created_at")
+        fields = (
+            "id",
+            "show_time",
+            "show_name",
+            "theatre_hall",
+            "row",
+            "seat",
+            "created_at",
+        )
 
 
 class ReservationSerializer(serializers.ModelSerializer):

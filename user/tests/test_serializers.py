@@ -19,7 +19,7 @@ class UserSerializerTests(TestCase):
             email="test@example.com",
             password="strongpassword123",
             first_name="Test",
-            last_name="User"
+            last_name="User",
         )
         self.genre1 = Genre.objects.create(name="Drama")
         self.genre2 = Genre.objects.create(name="Comedy")
@@ -30,7 +30,7 @@ class UserSerializerTests(TestCase):
         data = {
             "email": "new@example.com",
             "password": "strongpass123",
-            "password2": "strongpass123"
+            "password2": "strongpass123",
         }
         serializer = UserCreateSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
@@ -42,12 +42,14 @@ class UserSerializerTests(TestCase):
         data = {
             "email": "new@example.com",
             "password": "strongpass123",
-            "password2": "wrongpass"
+            "password2": "wrongpass",
         }
         serializer = UserCreateSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn("non_field_errors", serializer.errors)
-        self.assertIn("Passwords don't match", str(serializer.errors["non_field_errors"]))
+        self.assertIn(
+            "Passwords don't match", str(serializer.errors["non_field_errors"])
+        )
 
     # --- UserUpdateSerializer ---
 

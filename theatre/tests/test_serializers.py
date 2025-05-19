@@ -27,31 +27,26 @@ class SerializerTestCase(TestCase):
         self.performance = Performance.objects.create(
             play=self.play,
             theatre_hall=self.hall,
-            show_time=timezone.now() + timedelta(days=1)
+            show_time=timezone.now() + timedelta(days=1),
         )
 
     def test_actor_serializer_output(self):
         serializer = ActorSerializer(self.actor)
-        expected = {
-            "id": self.actor.id,
-            "first_name": "John",
-            "last_name": "Doe"
-        }
+        expected = {"id": self.actor.id, "first_name": "John", "last_name": "Doe"}
         self.assertEqual(serializer.data, expected)
 
     def test_genre_serializer_output(self):
         serializer = GenreSerializer(self.genre)
-        expected = {
-            "id": self.genre.id,
-            "name": "Comedy"
-        }
+        expected = {"id": self.genre.id, "name": "Comedy"}
         self.assertEqual(serializer.data, expected)
 
     def test_play_list_serializer(self):
         serializer = PlayListSerializer(self.play)
         self.assertEqual(serializer.data["title"], "Hamlet")
         self.assertIn("Comedy", serializer.data["genre"])
-        self.assertIn("John Doe", serializer.data["actor"])  # Спрацює якщо в моделі є @property full_name
+        self.assertIn(
+            "John Doe", serializer.data["actor"]
+        )  # Спрацює якщо в моделі є @property full_name
 
     def test_play_detail_serializer(self):
         serializer = PlayDetailSerializer(self.play)
@@ -74,8 +69,9 @@ class SerializerTestCase(TestCase):
     def test_performance_detail_serializer(self):
         performance = Performance.objects.annotate(
             tickets_available=ExpressionWrapper(
-                F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets"),
-                output_field=IntegerField()
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                - Count("tickets"),
+                output_field=IntegerField(),
             )
         ).get(id=self.performance.id)
 

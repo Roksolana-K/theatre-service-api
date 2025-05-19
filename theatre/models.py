@@ -51,8 +51,12 @@ class Play(models.Model):
 
 class TheatreHall(models.Model):
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
-    rows = models.IntegerField(validators=[MinValueValidator(1)], null=False, blank=False)
-    seats_in_row = models.IntegerField(validators=[MinValueValidator(1)], null=False, blank=False)
+    rows = models.IntegerField(
+        validators=[MinValueValidator(1)], null=False, blank=False
+    )
+    seats_in_row = models.IntegerField(
+        validators=[MinValueValidator(1)], null=False, blank=False
+    )
 
     class Meta:
         verbose_name = "Theatre Hall"
@@ -68,8 +72,12 @@ class TheatreHall(models.Model):
 
 
 class Performance(models.Model):
-    play = models.ForeignKey(Play, related_name="performances", on_delete=models.CASCADE)
-    theatre_hall = models.ForeignKey(TheatreHall, related_name="performances", on_delete=models.CASCADE)
+    play = models.ForeignKey(
+        Play, related_name="performances", on_delete=models.CASCADE
+    )
+    theatre_hall = models.ForeignKey(
+        TheatreHall, related_name="performances", on_delete=models.CASCADE
+    )
     show_time = models.DateTimeField(null=False, blank=False)
 
     class Meta:

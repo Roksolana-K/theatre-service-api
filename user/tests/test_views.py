@@ -11,13 +11,16 @@ MANAGE_URL = reverse("user:my_info")
 DELETE_URL = reverse("user:my_info_delete")
 LIST_URL = reverse("user:all_users")
 
+
 def create_user(**params):
     return User.objects.create_user(**params)
+
 
 def get_token(client, email, password):
     url = reverse("token_obtain_pair")
     res = client.post(url, {"email": email, "password": password})
     return res.data["access"]
+
 
 class UserViewTests(APITestCase):
     def setUp(self):
@@ -25,18 +28,17 @@ class UserViewTests(APITestCase):
             email="user@example.com",
             password="testpass123",
             first_name="Test",
-            last_name="User"
+            last_name="User",
         )
         self.admin = User.objects.create_superuser(
-            email="admin@example.com",
-            password="adminpass123"
+            email="admin@example.com", password="adminpass123"
         )
 
     def test_create_user_success(self):
         payload = {
             "email": "new@example.com",
             "password": "newpass123",
-            "password2": "newpass123"
+            "password2": "newpass123",
         }
         res = self.client.post(REGISTER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
@@ -47,7 +49,7 @@ class UserViewTests(APITestCase):
         payload = {
             "email": "new@example.com",
             "password": "newpass123",
-            "password2": "newpass125"  # Паролі не однакові
+            "password2": "newpass125",  # Паролі не однакові
         }
         res = self.client.post(REGISTER_URL, payload)
 
