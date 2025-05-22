@@ -1,16 +1,17 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 from datetime import timedelta
 
 from reservations.models import Reservation, Ticket
 from theatre.models import Performance, Play, TheatreHall
-from user.models import User
 
 from reservations.serializers import (
     TicketSerializer,
     ReservationSerializer,
 )
 
+User = get_user_model()
 
 class SerializerTests(TestCase):
 
